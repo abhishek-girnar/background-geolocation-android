@@ -85,19 +85,40 @@ public class DistanceFilterLocationProvider extends AbstractLocationProvider imp
         alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         // Stop-detection PI
-        stationaryAlarmPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_ALARM_ACTION), 0);
+        stationaryAlarmPI = null;
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+            stationaryAlarmPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_ALARM_ACTION), PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            stationaryAlarmPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_ALARM_ACTION), 0);
+        }
         registerReceiver(stationaryAlarmReceiver, new IntentFilter(STATIONARY_ALARM_ACTION));
 
         // Stationary region PI
-        stationaryRegionPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_REGION_ACTION), PendingIntent.FLAG_CANCEL_CURRENT);
-        registerReceiver(stationaryRegionReceiver, new IntentFilter(STATIONARY_REGION_ACTION));
+       stationaryRegionPI = null;
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+            stationaryRegionPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_REGION_ACTION), PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            stationaryRegionPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_REGION_ACTION), PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+
+            registerReceiver(stationaryRegionReceiver, new IntentFilter(STATIONARY_REGION_ACTION));
 
         // Stationary location monitor PI
-        stationaryLocationPollingPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_LOCATION_MONITOR_ACTION), 0);
+      stationaryLocationPollingPI = null;
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+            stationaryLocationPollingPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_LOCATION_MONITOR_ACTION), PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            stationaryLocationPollingPI = PendingIntent.getBroadcast(mContext, 0, new Intent(STATIONARY_LOCATION_MONITOR_ACTION), 0);
+        }
         registerReceiver(stationaryLocationMonitorReceiver, new IntentFilter(STATIONARY_LOCATION_MONITOR_ACTION));
 
         // One-shot PI (TODO currently unused)
-        singleUpdatePI = PendingIntent.getBroadcast(mContext, 0, new Intent(SINGLE_LOCATION_UPDATE_ACTION), PendingIntent.FLAG_CANCEL_CURRENT);
+        singleUpdatePI = null;
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+            singleUpdatePI = PendingIntent.getBroadcast(mContext, 0, new Intent(SINGLE_LOCATION_UPDATE_ACTION), PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            singleUpdatePI = PendingIntent.getBroadcast(mContext, 0, new Intent(SINGLE_LOCATION_UPDATE_ACTION), PendingIntent.FLAG_CANCEL_CURRENT);
+        }
         registerReceiver(singleUpdateReceiver, new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION));
 
         // Location criteria
